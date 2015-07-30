@@ -1,0 +1,25 @@
+{
+  "name": "webdriverio-mocha-helper",
+  "version": "1.0.0",
+  "description": "Helper library for better webdriverio integration in mocha and additional helper method like feature detection and server versioning.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netconomy/webdriverio-mocha-helper.git"
+  },
+  "keywords": [
+    "webdriverio",
+    "gui",
+    "testing",
+    "selenium"
+  ],
+  "author": "s.mayer@netconomy.net",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/netconomy/webdriverio-mocha-helper/issues"
+  },
+  "homepage": "https://github.com/netconomy/webdriverio-mocha-helper#readme"
+}
