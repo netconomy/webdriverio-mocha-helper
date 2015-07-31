@@ -1,0 +1,17 @@
+{
+    "globals": {
+        "describe": true,
+        "before": true,
+        "after": true,
+        "beforeEach": true,
+        "afterEach": true,
+        "it": true
+    },
+    "ecmaFeatures": {
+        "modules": false
+    },
+    "rules": {
+        "no-unused-expressions": 0,
+        "strict": [2, "global"]
+    }
+}

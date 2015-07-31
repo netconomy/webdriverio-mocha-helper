@@ -2,9 +2,12 @@
   "name": "webdriverio-mocha-helper",
   "version": "1.0.0",
   "description": "Helper library for better webdriverio integration in mocha and additional helper method like feature detection and server versioning.",
-  "main": "index.js",
+  "main": "lib/Helper.js",
   "scripts": {
-    "test": "test"
+    "compile": "babel --babelrc .babelrc -d lib/ src/",
+    "prepublish": "npm run compile",
+    "check": "eslint .",
+    "test": "istanbul cover --report html --dir coverage/node --root src --include-all-sources node_modules/mocha/bin/_mocha -- --color --require tools/babelhook tests/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -16,10 +19,24 @@
     "testing",
     "selenium"
   ],
-  "author": "s.mayer@netconomy.net",
+  "author": "Stefan Mayer <s.mayer@netconomy.net>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/netconomy/webdriverio-mocha-helper/issues"
   },
-  "homepage": "https://github.com/netconomy/webdriverio-mocha-helper#readme"
+  "homepage": "https://github.com/netconomy/webdriverio-mocha-helper#readme",
+  "devDependencies": {
+    "babel": "^5.8.19",
+    "babel-eslint": "^4.0.5",
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
+    "eslint": "^0.24.1",
+    "istanbul": "^0.3.17",
+    "mocha": "^2.2.5",
+    "rewire": "^2.3.4",
+    "sinon": "^1.15.4"
+  },
+  "peerDependencies": {
+    "webdriverio": ">= 3.1.0 < 4"
+  }
 }
