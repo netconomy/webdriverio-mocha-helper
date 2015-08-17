@@ -17,7 +17,7 @@ describe('Webdriver', () => {
 
     before(() => {
         rewiredWebdriver = Webdriver.__set__({
-            remote: webdriverIOMock,
+            WebdriverIO: webdriverIOMock,
         });
     });
 
