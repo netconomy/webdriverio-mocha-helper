@@ -1,13 +1,8 @@
 {
-     "modules": "common",
-     "optional": [
-         "es7.trailingFunctionCommas",
-         "es7.objectRestSpread",
-         "strict"
-     ],
-     "loose": [
-         "es6.modules",
-         "es6.classes",
-         "es6.arrowFunctions"
-     ]
- }
+    "presets": ["es2015"],
+    "plugins": [
+        "transform-object-rest-spread",
+        "transform-decorators-legacy",
+        "transform-strict-mode"
+    ]
+}

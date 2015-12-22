@@ -2,9 +2,11 @@
  * @author <a href="mailto:s.mayer@netconomy.net">Stefan Mayer</a>
  */
 
+const Logger = require('./logger');
+
 export function registerCommands(client) {
     client.addCommand('switchFrame', function switchFrame(iframeSelector) {
-        logger.info(`switching to iframe ${iframeSelector}`);
+        Logger.info(`switching to iframe ${iframeSelector}`);
         return this.waitForExist(iframeSelector)
             .element(iframeSelector, (err, res) => {
                 if (err) {
@@ -15,7 +17,7 @@ export function registerCommands(client) {
     });
 
     client.addCommand('fillForm', function fillForm(formSelector, data, submit) {
-        logger.info(`filling form ${formSelector}`);
+        Logger.info(`filling form ${formSelector}`);
         return Object.keys(data).reduce((prev, key) => {
             const selector = `${formSelector} [name=${key}]`;
             return prev.isVisibleWithinViewport(selector).then(function scrollIfInvisible(visible) {
@@ -25,39 +27,39 @@ export function registerCommands(client) {
                 return this;
             }).getTagName(`${formSelector} [name=${key}]`).then(function checkInputTagName(tagName) {
                 switch (tagName) {
-                    case 'select':
-                        return this.getAttribute(`${formSelector} [name=${key}]`, 'class').then(
-                            function checkSelectType(classes) {
-                                const jQuerySelect = classes.split(' ').filter((className) => {
-                                        return className === 'jQueryUISelectmenu';
-                                    }).length > 0;
-                                if (jQuerySelect) {
-                                    return this.selectjQueryUISelect(`${formSelector} [name=${key}]`, data[key]);
-                                }
-                                return this.selectByValue(`${formSelector} [name=${key}]`, data[key]);
+                case 'select':
+                    return this.getAttribute(`${formSelector} [name=${key}]`, 'class').then(
+                        function checkSelectType(classes) {
+                            const jQuerySelect = classes.split(' ').filter((className) => {
+                                return className === 'jQueryUISelectmenu';
+                            }).length > 0;
+                            if (jQuerySelect) {
+                                return this.selectjQueryUISelect(`${formSelector} [name=${key}]`, data[key]);
                             }
-                        );
-                    case 'input':
-                        return this.getAttribute(`${formSelector} [name=${key}]`, 'type').then(
-                            function checkIfInputOrCheckbox(type) {
-                                switch (type) {
-                                    case 'checkbox':
-                                        return this.checkCheckbox(`${formSelector} [name=${key}]`, data[key]);
-                                    default:
-                                        return this.setValue(`${formSelector} [name=${key}]`, data[key]);
-                                }
+                            return this.selectByValue(`${formSelector} [name=${key}]`, data[key]);
+                        }
+                    );
+                case 'input':
+                    return this.getAttribute(`${formSelector} [name=${key}]`, 'type').then(
+                        function checkIfInputOrCheckbox(type) {
+                            switch (type) {
+                            case 'checkbox':
+                                return this.checkCheckbox(`${formSelector} [name=${key}]`, data[key]);
+                            default:
+                                return this.setValue(`${formSelector} [name=${key}]`, data[key]);
                             }
-                        );
-                    default:
-                        throw new Error(`Field type ${tagName} not yet supported`);
+                        }
+                    );
+                default:
+                    throw new Error(`Field type ${tagName} not yet supported`);
                 }
             }).catch((e) => {
-                logger.info(`could not find field ${formSelector} [name=${key}]`);
+                Logger.info(`could not find field ${formSelector} [name=${key}]`);
                 throw e;
             });
         }, this).then(function submitForm() {
             if (submit) {
-                logger.info(`submitting form ${formSelector}`);
+                Logger.info(`submitting form ${formSelector}`);
                 return this.click(`${formSelector} [type=submit]`);
             }
         });
@@ -88,7 +90,7 @@ export function registerCommands(client) {
             const clickNeeded = selected !== value;
             if (clickNeeded) {
                 return this.click(selector).catch(() => {
-                    logger.info('Handling special case for XXXL on chrome');
+                    Logger.info('Handling special case for XXXL on chrome');
                     return this.execute(function clickOnCheckbox(sel) {
                         return document.querySelector(sel).click();
                     }, selector);
