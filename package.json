@@ -7,7 +7,7 @@
     "compile": "babel --babelrc .babelrc -d lib/ src/",
     "prepublish": "npm run compile",
     "check": "eslint .",
-    "test": "istanbul cover --report html --dir coverage/node --root src --include-all-sources node_modules/mocha/bin/_mocha -- --color --require tools/babelhook tests/**/*.spec.js"
+    "test": "babel-node node_modules/isparta/bin/isparta cover --report html --dir coverage/node --root src --include-all-sources node_modules/mocha/bin/_mocha -- --color --require tools/babelhook tests/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -37,12 +37,12 @@
     "chai-as-promised": "^5.2.0",
     "chalk": "^1.1.1",
     "eslint": "^1.10.3",
-    "istanbul": "^0.4.1",
+    "isparta": "^4.0.0",
     "mocha": "^2.3.4",
     "rewire": "^2.5.1",
     "sinon": "^1.17.2"
   },
-  "peerDependencies": {
-    "webdriverio": ">= 3.1.0 < 4"
+  "dependencies": {
+    "webdriverio": "^3.4.0"
   }
 }

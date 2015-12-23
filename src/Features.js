@@ -11,7 +11,7 @@ ChaiAsPromised.transferPromiseness = (assertion, promise) => {
     assertion.catch = promise.catch.bind(promise);
 };
 
-export default class Features {
+class Features {
     constructor(describe, it, webdriver) {
         this.describe = describe;
         this.it = it;
@@ -106,3 +106,5 @@ export default class Features {
         return this.pageObjects;
     }
 }
+
+module.exports = Features;

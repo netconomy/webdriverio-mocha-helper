@@ -4,7 +4,7 @@
 
 const chalk = require('chalk');
 
-export default {
+module.exports = {
     info: (msg) => {
         chalk.gray(msg);
     },

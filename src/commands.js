@@ -4,7 +4,7 @@
 
 const Logger = require('./logger');
 
-export function registerCommands(client) {
+function registerCommands(client) {
     client.addCommand('switchFrame', function switchFrame(iframeSelector) {
         Logger.info(`switching to iframe ${iframeSelector}`);
         return this.waitForExist(iframeSelector)
@@ -27,31 +27,31 @@ export function registerCommands(client) {
                 return this;
             }).getTagName(`${formSelector} [name=${key}]`).then(function checkInputTagName(tagName) {
                 switch (tagName) {
-                case 'select':
-                    return this.getAttribute(`${formSelector} [name=${key}]`, 'class').then(
-                        function checkSelectType(classes) {
-                            const jQuerySelect = classes.split(' ').filter((className) => {
-                                return className === 'jQueryUISelectmenu';
-                            }).length > 0;
-                            if (jQuerySelect) {
-                                return this.selectjQueryUISelect(`${formSelector} [name=${key}]`, data[key]);
+                    case 'select':
+                        return this.getAttribute(`${formSelector} [name=${key}]`, 'class').then(
+                            function checkSelectType(classes) {
+                                const jQuerySelect = classes.split(' ').filter((className) => {
+                                    return className === 'jQueryUISelectmenu';
+                                }).length > 0;
+                                if (jQuerySelect) {
+                                    return this.selectjQueryUISelect(`${formSelector} [name=${key}]`, data[key]);
+                                }
+                                return this.selectByValue(`${formSelector} [name=${key}]`, data[key]);
                             }
-                            return this.selectByValue(`${formSelector} [name=${key}]`, data[key]);
-                        }
-                    );
-                case 'input':
-                    return this.getAttribute(`${formSelector} [name=${key}]`, 'type').then(
-                        function checkIfInputOrCheckbox(type) {
-                            switch (type) {
-                            case 'checkbox':
-                                return this.checkCheckbox(`${formSelector} [name=${key}]`, data[key]);
-                            default:
-                                return this.setValue(`${formSelector} [name=${key}]`, data[key]);
+                        );
+                    case 'input':
+                        return this.getAttribute(`${formSelector} [name=${key}]`, 'type').then(
+                            function checkIfInputOrCheckbox(type) {
+                                switch (type) {
+                                    case 'checkbox':
+                                        return this.checkCheckbox(`${formSelector} [name=${key}]`, data[key]);
+                                    default:
+                                        return this.setValue(`${formSelector} [name=${key}]`, data[key]);
+                                }
                             }
-                        }
-                    );
-                default:
-                    throw new Error(`Field type ${tagName} not yet supported`);
+                        );
+                    default:
+                        throw new Error(`Field type ${tagName} not yet supported`);
                 }
             }).catch((e) => {
                 Logger.info(`could not find field ${formSelector} [name=${key}]`);
@@ -100,3 +100,7 @@ export function registerCommands(client) {
         });
     });
 }
+
+module.exports = {
+    registerCommands,
+};

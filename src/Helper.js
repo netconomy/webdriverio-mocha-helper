@@ -5,7 +5,7 @@
 const Webdriver = require('./Webdriver');
 const Features = require('./Features');
 
-export default class Helper {
+class Helper {
     constructor(describe, it, options) {
         this.options = options;
         this.describe = describe;
@@ -46,3 +46,5 @@ export default class Helper {
         });
     }
 }
+
+module.exports = Helper;

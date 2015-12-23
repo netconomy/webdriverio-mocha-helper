@@ -3,9 +3,9 @@
  */
 
 const WebdriverIO = require('webdriverio');
-const Commands = require('./commands');
+const commands = require('./commands');
 
-export default class Webdriver {
+class Webdriver {
     constructor(options) {
         this.options = options;
         this.options.port = parseInt(options.port, 10);
@@ -22,7 +22,7 @@ export default class Webdriver {
             return Promise.resolve(this.client);
         }
         return this.setupClient().init().then(() => {
-            Commands.registerCommands(this.client);
+            commands.registerCommands(this.client);
         });
     }
 
@@ -36,3 +36,5 @@ export default class Webdriver {
         return this.options.screenshotPath;
     }
 }
+
+module.exports = Webdriver;

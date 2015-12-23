@@ -1,9 +1,18 @@
 {
+  "globals": {
+    "describe": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "it": true
+  },
   "settings" : {
     "ecmascript": 6
   },
   "env": {
-    "node": true
+    "node": true,
+    "browser": true
   },
   "ecmaFeatures": {
     "blockBindings": true,
@@ -17,12 +26,13 @@
     "spread": true,
     "jsx": true,
     "arrowFunctions": true,
-    "classes": true
+    "classes": true,
+    "experimentalObjectRestSpread": true
   },
   "rules": {
     // Possible Errors
     "no-extra-boolean-cast": 1,
-    "comma-dangle": [2, "never"],
+    "comma-dangle": [2, "always"],
     "no-empty": 1,
     "no-extra-parens": [2, "functions"],
     // Best Practices
@@ -44,7 +54,7 @@
       "beforeColon": false,
       "afterColon": true
     }],
-    "indent": [2, 4],
+    "indent": [2, 4, {"SwitchCase": 1}],
     "brace-style": [2, "1tbs"],
     "comma-spacing": [2, {"before": false, "after": true}],
     "comma-style": [2, "last"],
