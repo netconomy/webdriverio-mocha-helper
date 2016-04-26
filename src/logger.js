@@ -5,11 +5,15 @@
 const chalk = require('chalk');
 
 module.exports = {
-    info: (msg) => {
-        chalk.gray(msg);
+    info: function info(msg) {
+        console.log(chalk.gray(msg));
     },
 
-    error: (msg) => {
-        chalk.red.bold(msg);
+    verbose: function verbose(msg) {
+        console.log(chalk.magenta.bold(msg));
     },
+
+    error: function error(msg) {
+        console.log(chalk.red.bold(msg));
+    }
 };
