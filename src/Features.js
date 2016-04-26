@@ -5,7 +5,7 @@ const Chai = require('chai');
 const ChaiAsPromised = require('chai-as-promised');
 const Semver = require('semver');
 const Logger = require('./logger');
-var Env = require('../../../common/env');
+const Env = require('../../../common/env');
 
 Chai.use(ChaiAsPromised);
 ChaiAsPromised.transferPromiseness = (assertion, promise) => {

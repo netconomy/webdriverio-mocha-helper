@@ -4,7 +4,7 @@
 
 const Webdriver = require('./Webdriver');
 const Features = require('./Features');
-const async = require('async');
+const Async = require('async');
 
 class Helper {
     constructor(describe, it, options) {
@@ -54,7 +54,7 @@ class Helper {
                     fn().then(cb.bind(null, null), cb);
                 };
             });
-            async.series(wrappedFunctions, (err, result) => {
+            Async.series(wrappedFunctions, (err, result) => {
                 if (err) {
                     return reject(err);
                 }
