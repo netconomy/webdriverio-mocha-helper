@@ -2,7 +2,7 @@
  * @author <a href="mailto:s.mayer@netconomy.net">Stefan Mayer</a>
  */
 
-var chalk = require('chalk');
+const chalk = require('chalk');
 
 module.exports = {
     info: function info(msg) {
