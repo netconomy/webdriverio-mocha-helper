@@ -4,14 +4,15 @@
 
 const Webdriver = require('./Webdriver');
 const Features = require('./Features');
+const async = require('async');
 
 class Helper {
     constructor(describe, it, options) {
         this.options = options;
         this.describe = describe;
         this.it = it;
-        this.webdriver = new Webdriver(options.webdriver);
-        this.features = new Features(describe, it, options.features, this.webdriver);
+        this.webdriver = new Webdriver(options);
+        this.features = new Features(describe, it, this.webdriver);
     }
 
     guiTest(title) {
@@ -28,14 +29,14 @@ class Helper {
             fn = arguments[argumentIndex];
         }
         pageClasses = Object.assign({}, newPageClasses, parentPageObjects || {});
-
         if (!fn) {
+
             return {
-                withVersion: this.features.withVersion.bind(null, title, pageClasses, parentPageObjects, true),
-                withFeatureEnabled: this.features.withFeatureEnabled.bind(null, title, pageClasses, parentPageObjects, true),
+                withVersion: this.features.withVersion.bind(this.features, title, pageClasses, parentPageObjects, true),
+                withFeatureEnabled: this.features.withFeatureEnabled.bind(this.features, title, pageClasses, parentPageObjects, true),
             };
         }
-        return describe(title, this.features.testWrapperFactory(pageClasses, parentPageObjects, fn));
+        return describe(title, this.features.testWrapperFactory(pageClasses, parentPageObjects, fn).bind(this.features));
     }
 
     runTest(title, fn) {
@@ -45,6 +46,35 @@ class Helper {
             });
         });
     }
+
+    runSeries(promiseFunctions) {
+        return new Promise((resolve, reject) => {
+            const wrappedFunctions = promiseFunctions.map((fn) => {
+                return function promiseWrapper(cb) {
+                    fn().then(cb.bind(null, null), cb);
+                };
+            });
+            async.series(wrappedFunctions, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result);
+            });
+        });
+    };
+
+    pageAction(target, name, descriptor) {
+        const originalFn = descriptor.value;
+        descriptor.value = function pageActionWrapper() {
+            const args = arguments;
+            return () => {
+                return originalFn.apply(this.client, args).catch((e) => {
+                    throw e; // Webdriver has a bug where it sometimes ignores one promise handler on rejected promises.
+                });
+            };
+        };
+    };
+
 }
 
 module.exports = Helper;

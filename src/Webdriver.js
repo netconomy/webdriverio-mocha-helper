@@ -11,7 +11,6 @@ class Webdriver {
         this.options.port = parseInt(options.port, 10);
         this.client = null;
     }
-
     setupClient() {
         this.client = WebdriverIO.remote(this.options);
         return this.client;

@@ -3,7 +3,9 @@
  */
 const Chai = require('chai');
 const ChaiAsPromised = require('chai-as-promised');
+const Semver = require('semver');
 const Logger = require('./logger');
+var Env = require('../../../common/env');
 
 Chai.use(ChaiAsPromised);
 ChaiAsPromised.transferPromiseness = (assertion, promise) => {
@@ -19,36 +21,43 @@ class Features {
         this.pageObjects = {};
     }
 
-    withVersion(title) {
-        let fn;
-        let pageClasses;
-        let newPageClasses = {};
-        let argumentIndex = 1;
-        const parentPageObjects = this.pageObjects;
-        if (typeof (arguments[argumentIndex]) === 'object') {
-            newPageClasses = arguments[argumentIndex];
-            argumentIndex++;
-        }
-        if (typeof (arguments[argumentIndex]) === 'function') {
-            fn = arguments[argumentIndex];
-        }
-        pageClasses = Object.assign({}, newPageClasses, parentPageObjects || {});
-
-        if (!fn) {
+    withVersion(title, pageClasses, parentPageObjects, enabled, version, fn) {
+        const backendVersion = Env.getVersion();
+        if (enabled && Semver.satisfies(backendVersion, `>=${version}`)) {
+            if (fn) {
+                return describe(title, this.testWrapperFactory(pageClasses, parentPageObjects, fn).bind(this));
+            }
             return {
-                withVersion: this.withVersion.bind(null, title, pageClasses, parentPageObjects, true),
-                withFeatureEnabled: this.withFeatureEnabled.bind(null, title, pageClasses, parentPageObjects, true),
+                withFeatureEnabled: this.withFeatureEnabled.bind(this, title, pageClasses, parentPageObjects, true),
             };
         }
-        return describe(title, this.testWrapperFactory(pageClasses, parentPageObjects, fn));
+        if (fn) {
+            return xdescribe(title, this.testWrapperFactory(pageClasses, parentPageObjects, fn));
+        }
+        return {
+            withFeatureEnabled: this.withFeatureEnabled.bind(this, title, pageClasses, parentPageObjects, false),
+        };
     }
 
-    withFeatureEnabled(title, fn) {
-        return it(title, function itWrapper() {
-            return fn.apply(this, arguments).catch((e) => {
-                throw e; // Webdriver has a bug where it sometimes ignores one promise handler on rejected promises.
-            });
-        });
+    withFeatureEnabled(title, pageClasses, parentPageObjects, enabled, featureFlag, fn) {
+        if (enabled && Env.supportsFeature(featureFlag)) {
+            Logger.verbose(`Feature '${featureFlag}' is supported`);
+            if (fn) {
+                return describe(title, this.testWrapperFactory(pageClasses, parentPageObjects, fn).bind(this));
+            }
+            return {
+                withVersion: this.withVersion.bind(this, title, pageClasses, parentPageObjects, true),
+            };
+        }
+        if (enabled) {
+            Logger.verbose(`Feature '${featureFlag}' is not supported`);
+        }
+        if (fn) {
+            return xdescribe(title, this.testWrapperFactory(pageClasses, parentPageObjects, fn).bind(this));
+        }
+        return {
+            withVersion: this.withVersion.bind(this, title, pageClasses, parentPageObjects, false),
+        };
     }
 
     testWrapperFactory(pageClasses, parentPageObjects, fn) {
@@ -67,6 +76,7 @@ class Features {
                         scopeObject[key] = new classes[key](scopeObject.client);
                     });
                 }
+
                 if (!this.webdriver.client) {
                     return this.webdriver.fullySetupClient().then(() => {
                         scope.client = this.webdriver.client;

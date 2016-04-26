@@ -2,14 +2,19 @@
  * @author <a href="mailto:s.mayer@netconomy.net">Stefan Mayer</a>
  */
 
-const chalk = require('chalk');
+const clc = require('cli-color');
 
-module.exports = {
-    info: (msg) => {
-        chalk.gray(msg);
-    },
+const errorColor = clc.red.bold;
+const infoColor = clc.blackBright;
 
-    error: (msg) => {
-        chalk.red.bold(msg);
-    },
+exports.verbose = function verbose(message) {
+    console.log(`${message}`);
+};
+
+exports.info = function info(message) {
+    console.log(infoColor(`      ${message}`));
+};
+
+exports.error = function error(message) {
+    console.log(errorColor(message));
 };
