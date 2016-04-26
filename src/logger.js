@@ -2,18 +2,18 @@
  * @author <a href="mailto:s.mayer@netconomy.net">Stefan Mayer</a>
  */
 
-const chalk = require('chalk');
+var chalk = require('chalk');
 
 module.exports = {
-    info: (msg) => {
-        chalk.gray(msg);
+    info: function info(msg) {
+        console.log(chalk.gray(msg));
     },
 
-    verbose: (msg) => {
-        chalk.magenta.bold(msg);
+    verbose: function verbose(msg) {
+        console.log(chalk.magenta.bold(msg));
     },
 
-    error: (msg) => {
-        chalk.red.bold(msg);
-    },
+    error: function error(msg) {
+        console.log(chalk.red.bold(msg));
+    }
 };
