@@ -6,6 +6,36 @@ The main purpose of webdriverio-mocha-helper is to provide you with helper metho
 ```
 npm install webdriverio-mocha-helper --save
 ```
+### Migration
+
+The Helper class needs the parameter ``options`` on creation. The options have to be taken from the local environment file ``env``.
+Create a function in the common/helpers.js file::
+
+```
+const Env = require('./env');
+
+exports.addOptions = () =>{
+	const options = {
+		desiredCapabilities: {
+			browserName: Env.getBrowser(),
+		},
+		waitforTimeout: Env.getDefaultTimeout(),
+		port: Env.getSeleniumPort(),
+		host: Env.getSeleniumHost(),
+		baseUrl: Env.getBaseUrl(),
+		logLevel: 'silent',
+		coloredLogs: true,
+		screenshotPath: Env.getErrorScreenshotDir(),
+	};
+	return options;
+}
+```
+This function is necessary for the helper class::
+
+```
+import Helper from 'webdriverio-mocha-helper';
+const helper = new Helper(describe,it, require('../common/helpers').addOptions());
+```
 
 ### Library Content
 
