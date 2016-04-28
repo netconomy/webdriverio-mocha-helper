@@ -1,0 +1,10 @@
+/tools
+/tests
+/src
+*.log
+.idea
+node_modules
+coverage
+/.eslintrc
+/.eslintignore
+/.babelrc
