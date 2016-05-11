@@ -99,6 +99,16 @@ function registerCommands(client) {
             return this;
         });
     });
+
+    client.addCommand('dropDownSelector', function dropDownSelector (that, dropdownSelector, value) {
+        return that.isExisting(dropdownSelector)
+            .then((isExisting) => {
+                if (!isExisting) {
+                    throw new Error('The Flyout is not visible. Did you call "clickFlyout()" beforehand?');
+                }
+            })
+            .selectByValue(dropdownSelector, value);
+    });
 }
 
 module.exports = {
