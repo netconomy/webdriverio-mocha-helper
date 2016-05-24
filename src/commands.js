@@ -31,8 +31,8 @@ function registerCommands(client) {
                         return this.getAttribute(`${formSelector} [name=${key}]`, 'class').then(
                             function checkSelectType(classes) {
                                 const jQuerySelect = classes.split(' ').filter((className) => {
-                                    return className === 'jQueryUISelectmenu';
-                                }).length > 0;
+                                        return className === 'jQueryUISelectmenu';
+                                    }).length > 0;
                                 if (jQuerySelect) {
                                     return this.selectjQueryUISelect(`${formSelector} [name=${key}]`, data[key]);
                                 }
@@ -108,6 +108,18 @@ function registerCommands(client) {
                 }
             })
             .selectByValue(dropdownSelector, value);
+    })
+
+    client.addCommand('getUrlStatusCode', function getUrlStatusCode(url) {
+        Logger.info(`get http response status code for url: ${url}`);
+        return new Promise((resolve, reject) => {
+            request(url, function(err, res) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(res.statusCode);
+            });
+        });
     });
 }
 
