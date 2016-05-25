@@ -62,19 +62,17 @@ class Helper {
             });
         });
     };
-
-    pageAction(target, name, descriptor) {
-        const originalFn = descriptor.value;
-        descriptor.value = function pageActionWrapper() {
-            const args = arguments;
-            return () => {
-                return originalFn.apply(this.client, args).catch((e) => {
-                    throw e; // Webdriver has a bug where it sometimes ignores one promise handler on rejected promises.
-                });
-            };
-        };
-    };
-
-}
+};
 
 module.exports = Helper;
+module.exports.pageAction = function(target, name, descriptor) {
+    const originalFn = descriptor.value;
+    descriptor.value = function pageActionWrapper() {
+        const args = arguments;
+        return () => {
+            return originalFn.apply(this.client, args).catch((e) => {
+                throw e; // Webdriver has a bug where it sometimes ignores one promise handler on rejected promises.
+            });
+        };
+    };
+};

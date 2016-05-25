@@ -6,6 +6,37 @@ The main purpose of webdriverio-mocha-helper is to provide you with helper metho
 ```
 npm install webdriverio-mocha-helper --save
 ```
+### Migration
+
+The Helper class needs the parameter ``options`` on creation. The options have to be taken from the local environment file ``env``.
+Create a JavaScript file (e.g. WebdriverHelper) in the common directory::
+
+```javascript
+import WebdriverHelper from 'webdriverio-mocha-helper';
+const Env = require('./env');
+
+const options = {
+    desiredCapabilities: {
+        browserName: Env.getBrowser(),
+    },
+    waitforTimeout: Env.getDefaultTimeout(),
+    port: Env.getSeleniumPort(),
+    host: Env.getSeleniumHost(),
+    baseUrl: Env.getBaseUrl(),
+    logLevel: 'silent',
+    coloredLogs: true,
+    screenshotPath: Env.getErrorScreenshotDir()
+};
+
+module.exports = (describe, it) => {
+    const Webdriver = new WebdriverHelper(
+        describe, it,
+        options
+    );
+    return Webdriver;
+};
+
+```
 
 ### Library Content
 
@@ -18,25 +49,24 @@ npm install webdriverio-mocha-helper --save
 ### Helper's guiTest & runTest
 
 Helpers.js is the place where ``guiTest`` and ``runTest`` functions are called. 
-Calling the functions in your tests requires to import the Helper class with parameters:
+To use the helper functions from the package use this statement at the beginning of the tests/spec files::
 ```javascript
-import Helper from 'webdriverio-mocha-helper';
-const helper = new Helper(describe,it, require('../common/helpers').addOptions());
+const Webdriver = require('../../common/WebdriverHelper')(describe, it);
 ```
 Once imported and the const is declared you are ready use it in your tests.
 
 withVersion Example test: 
 ```javascript
-helper.guiTest('Version check',
+Webdriver.guiTest('Version check',
     function CheckoutTest() {
-        helper.guiTest('Version to high').withVersion('100.12.0', function VersionTest() {
-            helper.runTest('is not run because of version restriction', () => {
+        Webdriver.guiTest('Version to high').withVersion('100.12.0', function VersionTest() {
+            Webdriver.runTest('is not run because of version restriction', () => {
                 return this.expect(true).to.equal.false;
             });
         });
 
-        helper.guiTest('Version passes').withVersion('4.12.0', function VersionTest() {
-            helper.runTest('is run because version restriction is fullfilled', () => {
+        Webdriver.guiTest('Version passes').withVersion('4.12.0', function VersionTest() {
+            Webdriver.runTest('is run because version restriction is fullfilled', () => {
                 return this.client;
             });
         });
@@ -60,8 +90,7 @@ The idea behind page objects is to keep your test simple and clear and to push r
 
 Example:
 ```javascript
-import Helper from 'webdriverio-mocha-helper';
-const pageAction = new Helper(describe,it, require('../common/helpers').addOptions()).pageAction;
+import {pageAction} from 'webdriverio-mocha-helper';
 const Logger = require('../node_modules/webdriverio-mocha-helper/lib/logger');
 const idLoginForm = '#loginForm';
 
