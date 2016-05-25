@@ -91,7 +91,6 @@ The idea behind page objects is to keep your test simple and clear and to push r
 Example:
 ```javascript
 import {pageAction} from 'webdriverio-mocha-helper';
-const pageAction = new Helper(describe,it, require('../common/helpers').addOptions()).pageAction;
 const Logger = require('../node_modules/webdriverio-mocha-helper/lib/logger');
 const idLoginForm = '#loginForm';
 

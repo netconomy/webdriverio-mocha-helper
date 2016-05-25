@@ -1,6 +1,6 @@
 {
   "name": "webdriverio-mocha-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Helper library for better webdriverio integration in mocha and additional helper method like feature detection and server versioning.",
   "main": "lib/Helper.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "wdio-mocha-framework": "^0.2.12"
   },
   "dependencies": {
-    "webdriverio": "^3.4.0",
+    "webdriverio": "^4.0.7",
 	"async": "^1.4.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",

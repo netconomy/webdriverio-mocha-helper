@@ -104,7 +104,7 @@ function registerCommands(client) {
         return that.isExisting(dropdownSelector)
             .then((isExisting) => {
                 if (!isExisting) {
-                    throw new Error('The Flyout is not visible. Did you call "clickFlyout()" beforehand?');
+                    throw new Error('The element is not existing.');
                 }
             })
             .selectByValue(dropdownSelector, value);
